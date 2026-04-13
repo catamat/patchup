@@ -64,6 +64,48 @@ const versionPatch = "2"
 	}
 }
 
+func TestIncrementPatchVersionPreservesLeadingZeros(t *testing.T) {
+	initialContent := `package main
+
+const versionPatch = "001"
+`
+
+	expectedContent := `package main
+
+const versionPatch = "002"
+`
+
+	fileName := createTempFile(t, initialContent)
+	if err := run([]string{"-fn", fileName, "-pn", "versionPatch"}, fixedNow); err != nil {
+		t.Fatal(err)
+	}
+
+	if result := readFile(t, fileName); result != expectedContent {
+		t.Fatalf("expected %q, got %q", expectedContent, result)
+	}
+}
+
+func TestIncrementPatchVersionExpandsWidthOnOverflow(t *testing.T) {
+	initialContent := `package main
+
+const versionPatch = "099"
+`
+
+	expectedContent := `package main
+
+const versionPatch = "100"
+`
+
+	fileName := createTempFile(t, initialContent)
+	if err := run([]string{"-fn", fileName, "-pn", "versionPatch"}, fixedNow); err != nil {
+		t.Fatal(err)
+	}
+
+	if result := readFile(t, fileName); result != expectedContent {
+		t.Fatalf("expected %q, got %q", expectedContent, result)
+	}
+}
+
 func TestUpdateTimestamp(t *testing.T) {
 	initialContent := `package main
 
@@ -219,7 +261,24 @@ const versionPatch = "x"
 		t.Fatal("expected an error")
 	}
 
-	if !strings.Contains(err.Error(), "versionPatch must contain a numeric string") {
+	if !strings.Contains(err.Error(), "versionPatch must contain only decimal digits") {
+		t.Fatalf("unexpected error: %v", err)
+	}
+}
+
+func TestNegativePatchReturnsError(t *testing.T) {
+	initialContent := `package main
+
+const versionPatch = "-1"
+`
+
+	fileName := createTempFile(t, initialContent)
+	err := run([]string{"-fn", fileName, "-pn", "versionPatch"}, fixedNow)
+	if err == nil {
+		t.Fatal("expected an error")
+	}
+
+	if !strings.Contains(err.Error(), "versionPatch must contain only decimal digits") {
 		t.Fatalf("unexpected error: %v", err)
 	}
 }

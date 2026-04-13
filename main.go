@@ -255,13 +255,38 @@ func incrementStringLiteral(spec *ast.ValueSpec, index int, fieldName string) (b
 		return false, err
 	}
 
-	patch, err := strconv.Atoi(value)
+	incrementedValue, err := incrementDecimalString(value)
 	if err != nil {
-		return false, fmt.Errorf("%s must contain a numeric string: %w", fieldName, err)
+		return false, fmt.Errorf("%s must contain only decimal digits", fieldName)
 	}
 
-	lit.Value = strconv.Quote(strconv.Itoa(patch + 1))
+	lit.Value = strconv.Quote(incrementedValue)
 	return true, nil
+}
+
+func incrementDecimalString(value string) (string, error) {
+	if value == "" {
+		return "", errors.New("empty decimal string")
+	}
+
+	digits := []byte(value)
+	for _, digit := range digits {
+		if digit < '0' || digit > '9' {
+			return "", errors.New("non-decimal digit")
+		}
+	}
+
+	for i := len(digits) - 1; i >= 0; i-- {
+		if digits[i] == '9' {
+			digits[i] = '0'
+			continue
+		}
+
+		digits[i]++
+		return string(digits), nil
+	}
+
+	return "1" + string(digits), nil
 }
 
 func setStringLiteral(spec *ast.ValueSpec, index int, fieldName, value string) (bool, error) {
