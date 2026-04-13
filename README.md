@@ -1,6 +1,5 @@
 # Patchup
 [![License](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/catamat/patchup/blob/master/LICENSE)
-[![Build Status](https://travis-ci.org/catamat/patchup.svg?branch=master)](https://travis-ci.org/catamat/patchup)
 [![Go Report Card](https://goreportcard.com/badge/github.com/catamat/patchup)](https://goreportcard.com/report/github.com/catamat/patchup)
 [![Go Reference](https://pkg.go.dev/badge/github.com/catamat/patchup.svg)](https://pkg.go.dev/github.com/catamat/patchup)
 [![Version](https://img.shields.io/github/tag/catamat/patchup.svg?color=blue&label=version)](https://github.com/catamat/patchup/releases)
