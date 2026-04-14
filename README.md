@@ -4,7 +4,7 @@
 [![Go Reference](https://pkg.go.dev/badge/github.com/catamat/patchup.svg)](https://pkg.go.dev/github.com/catamat/patchup)
 [![Version](https://img.shields.io/github/tag/catamat/patchup.svg?color=blue&label=version)](https://github.com/catamat/patchup/releases)
 
-Patchup is a simple command line tool to increment the patch part of your version number so you just have to think about major and minor parts.
+Patchup is a command line tool to increment the patch part of your version number so you just have to think about major and minor parts.
 It will parse a source file to find and increment a patch var/const, it will also update a timestamp var/const if you need it.
 Target variables or constants must be package-level declarations assigned explicit string literals.
 Patchup should be called before each build.
